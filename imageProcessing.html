@@ -91,6 +91,49 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <h2 class="section-heading">Changing Brightness</h2>
+                    <p>
+                        To adjust image brightness, we simply scale each pixel RGB value by a positive factor &alpha;, When &alpha; is 0, we get a pure black image, when &alpha; is 1 we get the original image back. In other words, if we want to darken the image, we interpolate between black and the current pixel values. If we want to brighten the image, we extrapolate between black and the current pixel values.
+                    </p>
+
+                    <ul class="flex-container">
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/brightness_0.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">&alpha; = 0.0 <br> Black Image</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/brightness_0.5.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">0.5</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/brightness_1.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">1.0 <br> Input Image</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/brightness_1.5.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">1.5</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/brightness_2.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">2.0</span>
+                        </li>
+                    </ul>
+
+                    <blockquote> Example Usage: 
+                        <br>
+                        <code>
+                            $ ./image -brightness 1.5 &lt;input.bmp &gt;.out.bmp
+                        </code>
+                    </blockquote>
 
                     <h2 class="section-heading">Changing Contrast</h2>
 
@@ -164,7 +207,7 @@
                             $ ./image -crop 150 50 100 100 &lt;input.bmp &gt;.out.bmp
                         </code>
                     </blockquote>
-                    
+
                 </div>
             </div>
         </div>
