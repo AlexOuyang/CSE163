@@ -267,7 +267,10 @@
                                 Case 2: If cropped image dimension exceeds original image bounds, that is if cropping parameter w, h larger than the original image height and width. Then the cropped image will only contain the captured portion of the original image, i.e. cropped_image_max_height = original_image_height - y 
                             </li>
                             <li>
-                                Case 3: If w or h are 0 then the output image contains nothing.
+                                Case 3: If x or y exceeds original image bounds then the output image contains nothing
+                            </li>
+                            <li>
+                                Case 4: If w or h are 0 then the output image contains nothing.
                             </li>
                         </ul>
                     </p>
