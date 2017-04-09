@@ -463,7 +463,7 @@ body {
 }
 .flex-item-item-5 {
   width: 130px;
-  height: 250px;
+  height: 230px;
   margin-top: 20px;
 }
 .flex-item-item-5-img-container {
@@ -484,4 +484,9 @@ body {
   display: block;
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
+}
+.equation {
+  color: #777777;
+  font-style: italic;
+  background-color: #eeeeee;
 }
