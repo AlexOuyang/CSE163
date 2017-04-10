@@ -112,13 +112,13 @@
                     <p>
                         To adjust image brightness, we simply scale each RGB component of a pixel by a positive factor &alpha;, When &alpha; is 0, we get a pure black image, when &alpha; is 1 we get the original image back. In other words, if we want to darken the image, we interpolate between the zero RGB intensities (black image) and the current image. Note that Linear interpolation is often used to blend two images. &alpha; and (1 - &alpha;) are used in a weighted average to obtain the interpolated pixel value:
                         <blockquote class="equation">
-                            brightened_rgb_component = (1 - &alpha;) * black_rgb_component + &alpha; * input_rgb_component
+                            output_rgb_component = (1 - &alpha;) * black_rgb_component + &alpha; * input_rgb_component
                         </blockquote>
                     </p>
                     <p>
                         Since black RGB component is 0, we can simplify the formula: 
                         <blockquote class="equation">
-                            brightened_rgb_component = &alpha; * input_rgb_component
+                            output_rgb_component = &alpha; * input_rgb_component
                         </blockquote>
                         We can also obtain the brightened image through extrapolation.
                     </p>
@@ -172,13 +172,25 @@
 
                     <h2 class="section-heading">Changing Contrast</h2>
                     <p>
-                        Contrast is the difference in luminance or color that makes an object distinguishable. It can be controlled by interpolating and extrapolating between a constant grey image and the current image just like how we control brightness. Interpolation reduces contrast and extrapolation boosts the contrast. The grey image is obtained by calculating the average image luminance and assign each grey pixel’s rgb components to the average image luminance. Note that when a pixel’s rgb components are of the same value, it is on the grayscale. Here is one way to calculate pixel luminance (<a href ="http://www.itu.int/rec/R-REC-BT.601">http://www.itu.int/rec/R-REC-BT.601</a>): 
+                        Contrast is the difference in luminance that makes an object distinguishable. It can be controlled by interpolating and extrapolating between a constant grey image and the current image just like how we control brightness with a contract factor &alpha;. Interpolation reduces contrast and extrapolation boosts the contrast. The grey image is obtained by calculating the average image luminance and assign each grey pixel’s rgb components to the same average image luminance. Note that when a pixel’s rgb components are of the same value, it is on the grayscale. Here is one way to calculate pixel luminance (<a href ="http://www.itu.int/rec/R-REC-BT.601">http://www.itu.int/rec/R-REC-BT.601</a>): 
                         <blockquote class="equation">
                             pixel_luminance = (0.299 * R + 0.587 * G + 0.114 * B)
+                        </blockquote>
+                    </p>
+                    <p>
+                        Then apply interpolation on all rgb component for each pixel in the image as follows:
+                        <blockquote class="equation">
+                            output_rgb_component = (1 - &alpha;) * average_pixel_luminance + &alpha; * input_rgb_component
                         </blockquote>
                         A contrast factor of 0 produces a grey image with no contrast, 1 gives the original image, between 0 and 1 loses contrast, greater than 1 increases contrast, and less than 0 inverts the image. 
                     </p>
                     <ul class="flex-container">
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/contrast_-1.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">-1.0</span>
+                        </li>
                         <li class="flex-item-item-5">
                             <div class="flex-item-item-5-img-container">
                                 <img class="img-responsive" src="img/p1/contrast_0.bmp" alt="">
@@ -203,12 +215,6 @@
                             </div>
                             <span class="flex-item-text">2.0</span>
                         </li>
-                        <li class="flex-item-item-5">
-                            <div class="flex-item-item-5-img-container">
-                                <img class="img-responsive" src="img/p1/contrast_8.bmp" alt="">
-                            </div>
-                            <span class="flex-item-text">8.0</span>
-                        </li>
                     </ul>
                     <blockquote> Example Usage: 
                         <br>
@@ -222,8 +228,51 @@
 
 
                     <h2 class="section-heading">Changing Saturation</h2>
-
-
+                    <p>
+                        Saturation refers to the perceived intensity of a specific color. It is the purity of the color and represents the amount of grey in proportion to the hue. To control the saturation of an image, pixel components must move towards or away from the pixel's luminance value. In other words, we interpolate between the grayscale version of the input image and the input image using the saturation factor &alpha;. The grayscale image is obtained by calculating a unique luminance per pixel using the same pixel luminance calculation discussed in the above section. Then apply the same interpolation technique as follows:
+                        <blockquote class="equation">
+                            output_rgb_component = (1 - &alpha;) * current_pixel_luminance + &alpha; * input_rgb_component
+                        </blockquote>
+                        When &alpha; is 0, we obtain the grayscale version of the image; when &alpha; is 1, we obtain the original input image. So when &alpha; is between 0 and 1, it makes the image grayer, reducing the saturation of the colors. For &alpha; bigger than 1, we extrapolate increasing saturation. As for negative values, the hues or colors of the input image is inverted, like a photographic negative.  
+                    </p>
+                    <ul class="flex-container">
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/saturation_-1.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">-1.0</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/saturation_0.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">0.0 <br> Greyscale Image </span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/saturation_0.5.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">0.5</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/saturation_1.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">1.0 <br> Input Image</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/saturation_2.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">2.0</span>
+                        </li>
+                    </ul>
+                    <blockquote> Example Usage: 
+                        <br>
+                        <code>
+                            $ ./image -saturation 1.5 &lt;input.bmp &gt;.out.bmp
+                        </code>
+                    </blockquote>
 
 
 
