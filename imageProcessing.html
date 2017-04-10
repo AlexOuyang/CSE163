@@ -90,13 +90,37 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <h2 class="section-heading">Software</h2>
+                    <p>
+                    Download Unix Executable:
+                    </p>
+                    <p>
+                    <blockquote> 
+                        Example Usage: 
+                        <br>
+                        <code>
+                            $ ./image -help
+                        </code>
+                    </blockquote>
+                    </p>
+
+                    <h2 class="section-heading">Intro</h2>
+                    <p>
+                        Pixel is the basic unit of programmable color in a computer image. Each pixel is a sample of an original image. The intensity of each pixel is a variable. A pixel is typically represented by three or four component intensities such as red, green, and blue, which are typically in the range of 0–255, this is also known as the RGB color model.
+                    <p>
                     <h2 class="section-heading">Changing Brightness</h2>
                     <p>
-                        To adjust image brightness, we simply scale each pixel RGB intensity values by a positive factor &alpha;, When &alpha; is 0, we get a pure black image, when &alpha; is 1 we get the original image back. In other words, if we want to darken the image, we interpolate between the zero RGB intensity values (black) and  the current pixel’s RGB intensity values. Note that Linear interpolation is often used to blend two images. &alpha; and (1 - &alpha;) are used in a weighted average to obtain the interpolated pixel rgb:
+                        To adjust image brightness, we simply scale each RGB component of a pixel by a positive factor &alpha;, When &alpha; is 0, we get a pure black image, when &alpha; is 1 we get the original image back. In other words, if we want to darken the image, we interpolate between the zero RGB intensities (black image) and the current image. Note that Linear interpolation is often used to blend two images. &alpha; and (1 - &alpha;) are used in a weighted average to obtain the interpolated pixel value:
                         <blockquote class="equation">
-                            brightened_rgb_component = (1 - &alpha;) * black_rgb_component+ &alpha; * current_rgb_component
+                            brightened_rgb_component = (1 - &alpha;) * black_rgb_component + &alpha; * input_rgb_component
                         </blockquote>
-                        We can also obtain the brightened image through extrapolation similarly.
+                    </p>
+                    <p>
+                        Since black RGB component is 0, we can simplify the formula: 
+                        <blockquote class="equation">
+                            brightened_rgb_component = &alpha; * input_rgb_component
+                        </blockquote>
+                        We can also obtain the brightened image through extrapolation.
                     </p>
 
                     <ul class="flex-container">
@@ -104,7 +128,7 @@
                             <div class="flex-item-item-5-img-container">
                                 <img class="img-responsive" src="img/p1/brightness_0.bmp" alt="">
                             </div>
-                            <span class="flex-item-text">&alpha; = 0.0 <br> Black Image</span>
+                            <span class="flex-item-text">0.0 <br> Black Image</span>
                         </li>
                         <li class="flex-item-item-5">
                             <div class="flex-item-item-5-img-container">
@@ -147,9 +171,51 @@
 
 
                     <h2 class="section-heading">Changing Contrast</h2>
-
-
-
+                    <p>
+                        Contrast is the difference in luminance or color that makes an object distinguishable. It can be controlled by interpolating and extrapolating between a constant grey image and the current image just like how we control brightness. Interpolation reduces contrast and extrapolation boosts the contrast. The grey image is obtained by calculating the average image luminance and assign each grey pixel’s rgb components to the average image luminance. Note that when a pixel’s rgb components are of the same value, it is on the grayscale. Here is one way to calculate pixel luminance (<a href ="http://www.itu.int/rec/R-REC-BT.601">http://www.itu.int/rec/R-REC-BT.601</a>): 
+                        <blockquote class="equation">
+                            pixel_luminance = (0.299 * R + 0.587 * G + 0.114 * B)
+                        </blockquote>
+                        A contrast factor of 0 produces a grey image with no contrast, 1 gives the original image, between 0 and 1 loses contrast, greater than 1 increases contrast, and less than 0 inverts the image. 
+                    </p>
+                    <ul class="flex-container">
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/contrast_0.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">0.0 <br> Grey Image </span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/contrast_0.5.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">0.5</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/contrast_1.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">1.0 <br> Input Image</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/contrast_2.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">2.0</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/contrast_8.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">8.0</span>
+                        </li>
+                    </ul>
+                    <blockquote> Example Usage: 
+                        <br>
+                        <code>
+                            $ ./image -contrast 1.5 &lt;input.bmp &gt;.out.bmp
+                        </code>
+                    </blockquote>
 
 
 
@@ -168,11 +234,11 @@
                     <p>
                         Some images are not corrected for the nonlinear relationship between pixel value and displayed intensity for a color monitor. This nonlinear relationship can be described by a function raised to the power of gamma (&gamma;):
                         <blockquote class="equation">
-                            displayed_intensity = rgb_value <sup>&gamma;</sup>
+                            displayed_intensity = rgb_component <sup>&gamma;</sup>
                         </blockquote>
                     </p>
                     <p>
-                        Gamma correction corrects this by applying the inverse of this relationship to all RGB intensity values. Normally, input RGB component and output RGB component are in the range of 0–1, so if the input RGB component is in the range of 0-255, we normalize each rgb component by dividing it by 255:
+                        Gamma correction corrects this by applying the inverse of this relationship to pixel values for all pixels in an image. Normally, input RGB component and output RGB component are in the range of 0–1; if the input RGB component is in the range of 0-255, we divide that component by 255 to normalize it:
                         <blockquote class="equation">
 	                        normalized_input_rgb_component = input_rgb_component / 255
                             <br>
@@ -335,7 +401,7 @@
                             </a>
                         </li>
                     </ul>-->
-                    <p class="copyright text-muted">Copyright &copy; 2017</p>
+                    <p class="copyright text-muted">Software Made by Antwan Gaggi & Alex Ouyang</p>
                 </div>
             </div>
         </div>
