@@ -413,13 +413,13 @@
                     
                     <h2 class="section-heading">Quantization and Dithering</h2>
                     <p>
-                        Dithering is used to create the illusion of "color depth" in images with a limited color palette using color quantization and reducing quantization errors. For example, when dithering an image of 8-bit color to 1-bit color, the colors that are available in the 8-bit color palette are approximated by a diffusion of colored pixels from the available 1-bit color palette. We have implemeted various techniques for dithering images with a small number of bits (1-8 bit) that we'll discuss below.
+                        Dithering is used to create the illusion of "color depth" in images with a limited color palette using color quantization and reducing quantization errors. For example, when dithering an image from 8-bit color to 1-bit color, the colors that are available in the 8-bit color palette are approximated by a diffusion of colored pixels from the available 1-bit color palette. We have implemeted various techniques for dithering images with a small number of bits (1-8 bit) that we'll discuss below.
                     </p>
                     <h2 class="section-heading">Quantize</h2>
                     <p>
-                        Color quantization is a process that reduces the number of distinct colors used in an image. To quantizes the image we use nbits per color channel. We first need to define a map between the input [0 - 255] and the output [0 - (2<sup>nbits</sup> - 1)]. Note that we only support nbits between 1 and 8 in our implementation. A simple way of doing this is to first convert all values into floating point to lie between 0 and 1 (by dividing the input by 256). Then, select the quantum using
+                        Color quantization is a process that reduces the number of distinct colors used in an image. To quantizes the image we use "nbits" per color channel. We first need to define a map between the input, say 8-bit [0 - 255] and the output [0 - (2<sup>nbits</sup> - 1)]. Note that we only support nbits between 1 and 8 in our implementation. A simple way of doing this is to first convert all values into floating point to lie between 0 and 1 (by dividing the input by 256). Then, select the quantum using
                         <blockquote class="equation">
-                            q = floor(p / 256.0f * b)
+                            q = floor ( p / 256.0 * b )
                         </blockquote>
                     </p>
                     <p>
@@ -429,9 +429,9 @@
                         </blockquote>
                     </p>
                     <p>
-                        These values must then be mapped back into the 0 - 255 range, which can be done by computing the final color
+                        These values must then be mapped back into the 0 - 255 range to obtain the final colorc c<sub>f</sub>
                         <blockquote class="equation">
-	                        c<sub>f</sub> = floor(255 * q / (b - 1))
+	                        c<sub>f</sub> = floor ( 255 * q / (b - 1) )
                         </blockquote>
                     </p>
                     <p>
@@ -443,22 +443,103 @@
                     <p>
                         The problem with quantization is that it introduces a clear contouring for lower numbers of bits. To prevent this from happening we will need to handle quantization errors better. Dithering is such a process that can distribute errors among pixels to obtain better results. We have implemented two dithering algorithms here: Random Dither and Floyd-Steinberg Dither.
                     </p>
+                    <blockquote> Example Usage: 
+                        <br>
+                        <code>
+                            $ ./image -quantize 2 &lt;input.bmp &gt;.out.bmp
+                        </code>
+                    </blockquote>
                     <h2 class="section-heading">Random Dither</h2>
                     <p>
-                        Random Dither adds some noise before quantizing. The noise helps to break up the contouring. Perceptually, noise is found to be preferable since human eyes are more tolerant of high-frequency noise than contours or aliasing. In addition to the quantization process above, we add noise in the range from [-.5 ... +.5], which is generated using the random function.
+                        Random Dither was the first attempt to correct the contouring produced by fixed thresholding. Random Dither adds some noise before quantizing. The noise helps to break up the contouring. Perceptually, noise is found to be preferable since human eyes are more tolerant of high-frequency noise than contours or aliasing. In addition to the quantization process above, we add noise in the range from [-.5 ... +.5] when selecting the quantum as shown below.
                         <blockquote class="equation">
-                            q = floor(p / 256.0f * noise)
+                            q = floor ( p / 256.0f * noise )
+                        </blockquote>
+                        Note that noise can be generated using the random function.
+                    </p>
+                    <blockquote> Example Usage: 
+                        <br>
+                        <code>
+                            $ ./image -randomDither 2 &lt;input.bmp &gt;.out.bmp
+                        </code>
+                    </blockquote>
+                    <h2 class="section-heading">Floyd-Steinberg Dither</h2>
+                    <p>
+                        A more advanced dithering algorithm is the Floyd-Steinberg Dither. It achieves dithering using error diffusion, meaning it pushes the residual quantization error of a pixel onto its unprocessed neighboring pixels to be dealt with later. Specifically, the error is split and diffused out with the weights
+                        <br>Right: &alpha; = 7/16
+                        <br>Bottom Left: &beta; = 3/16
+                        <br>Bottom: &gamma; = 5/16
+                        <br>Bottom Right: &delta; = 1/16
+                        <br>Error diffusion reduces net errors which gives better result in comparison to Random Dither.
+                        <br>
+                        <br>As shown in the image below, we diffuse the error for each pixel:
+                        <img class="img-responsive blog-img" src="img/p1/error_diffusion.png" alt="">
+                        Pseudocode:
+                        <blockquote class="equation">
+                            alpha = 7.0 / 16.0
+                            <br>beta = 3.0 / 16.0
+                            <br>gamma = 5.0 / 16.0
+                            <br>delta = 1.0 / 16.0
+                            <br>
+                            <br>for each y from top to bottom
+                            <br>&emsp;for each x from left to right
+                            <br>&emsp;&emsp;oldpixel  = get_pixel(x, y)
+                            <br>&emsp;&emsp;newpixel  = quantize(oldpixel) &emsp;&emsp;&emsp;&emsp; // quantize() returns the quantized pixel
+                            <br>&emsp;&emsp;pixel[x][y]  = newpixel
+                            <br>&emsp;&emsp;quant_error  = oldpixel - newpixel
+                            <br>&emsp;&emsp;set_pixel( x + 1, y     ) = get_pixel( x + 1, y     ) + quant_error * alpha
+                            <br>&emsp;&emsp;set_pixel( x - 1, y + 1 ) = get_pixel( x - 1, y + 1 ) + quant_error * beta
+                            <br>&emsp;&emsp;set_pixel( x    , y + 1 ) = get_pixel( x    , y + 1 ) + quant_error * gamma
+                            <br>&emsp;&emsp;set_pixel( x + 1, y + 1 ) = get_pixel( x + 1, y + 1 ) + quant_error * delta
                         </blockquote>
                     </p>
                     <p>
-                        The algorithm achieves dithering using error diffusion, meaning it pushes (adds) the residual quantization error of a pixel onto its neighboring pixels, to be dealt with later. It spreads the debt out according to the distribution (shown as a map of the neighboring pixels):
-                        <img class="img-responsive" style="margin: 35px;" src="img/p1/error_diffusion.png" alt="">
+                        Note that the pseudocode above assumes all pixels always have 4 valid neighboring pixels, which means it does not deal with pixels on the edges of the image. To handle the edge condition, we can renormalize diffusion weights based on number of valid neighboring pixels to prevent darkening of edge pixels. The weights are renormalize in a way such that errors being diffused sum up to be the quantized error. For example, if the current pixel being quantized is on the right edge then there are no pixels to the right of it, so only the bottom pixel and the bottom left pixel are valid (assume the quantized pixel is in the middle of the image so there are pixels below it), therefore we only diffuse errors to these two pixels and the renormalized weights are &gamma;' = 5/8 for bottom pixel and &beta;' = 3/8 for bottom left pixel.
                         <blockquote class="equation">
-                            stuff
+                            <br>for each y from top to bottom
+                            <br>&emsp;for each x from left to right
+                            <br>&emsp;&emsp;...... do quant_error calculation ......
+                            <br>
+                            <br>&emsp;&emsp;if (validPixel(x+1, y) && validPixel(x-1, y+1) && validPixel(x, y+1) && validPixel(x+1, y+1))
+                            <br>&emsp;&emsp;&emsp;// If all neighboring pixels are valid
+                            <br>&emsp;&emsp;&emsp;alpha = 7.0 / 16.0
+                            <br>&emsp;&emsp;&emsp;beta = 3.0 / 16.0
+                            <br>&emsp;&emsp;&emsp;gamma = 5.0 / 16.0
+                            <br>&emsp;&emsp;&emsp;delta = 1.0 / 16.0
+                            <br>&emsp;&emsp;&emsp;...... do error diffusion on valid pixels ......
+                            <br>
+                            <br>&emsp;&emsp;else if (isValid(x+1, y) && ! isValid(x-1, y+1) && isValid(x, y+1) && isValid(x+1, y+1))
+                            <br>&emsp;&emsp;&emsp;// If left bottom pixel is invalid, no need for &beta;
+                            <br>&emsp;&emsp;&emsp;alpha = 7.0 / 13.0
+                            <br>&emsp;&emsp;&emsp;gamma = 5.0 / 13.0
+                            <br>&emsp;&emsp;&emsp;delta = 1.0 / 13.0
+                            <br>&emsp;&emsp;&emsp;...... do error diffusion on valid pixels ......
+                            <br>
+                            <br>&emsp;&emsp;else if (! isValid(x+1, y) && isValid(x-1, y+1) && ! isValid(x, y+1) && isValid(x+1, y+1))
+                            <br>&emsp;&emsp;&emsp;// If right and right bottom pixel are invalid, no need for &alpha; and &delta;
+                            <br>&emsp;&emsp;&emsp;beta = 3.0 / 8.0
+                            <br>&emsp;&emsp;&emsp;gamma = 5.0 / 8.0
+                            <br>&emsp;&emsp;&emsp;...... do error diffusion on valid pixels ......
+                            <br>
+                            <br>&emsp;&emsp;else if (isValid(x+1, y) && ! isValid(x-1, y+1) && !isValid(x, y+1) && ! isValid(x+1, y+1))
+                            <br>&emsp;&emsp;&emsp;// If only the right pixel is valid, push all error onto that pixel
+                            <br>&emsp;&emsp;&emsp;set_pixel(x+1, y) = get_pixel(x+1, y) + quant_error
+                            <br>
+                            <br>&emsp;&emsp;else if (isValid(x, y+1))
+                            <br>&emsp;&emsp;&emsp;// If only the bottom pixel is valid, push all error onto that pixel
+                            <br>&emsp;&emsp;&emsp;set_pixel(x, y+1) = get_pixel(x, y+1) + quant_error
+                            <br>
+                            <br>&emsp;&emsp;else
+                            <br>&emsp;&emsp;&emsp;// if no neighboring pixels then discard the error and do nothing
                         </blockquote>
                     </p>
 
-
+                    <blockquote> Example Usage: 
+                        <br>
+                        <code>
+                            $ ./image -FloydSteinbergDither 2 &lt;input.bmp &gt;.out.bmp
+                        </code>
+                    </blockquote>
 
                     <ul class="flex-container">
                         <li class="flex-item-item-5">

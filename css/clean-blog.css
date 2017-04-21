@@ -496,3 +496,7 @@ body {
   font-style: italic;
   background-color: #eeeeee;
 }
+.blog-img {
+  display: block;
+  margin: 45px auto;
+}
