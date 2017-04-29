@@ -122,7 +122,9 @@
                         </blockquote>
                         We can also obtain the brightened image through extrapolation.
                     </p>
-
+                    <p>
+                        Note: To see full rez image, you'll need to open the image in a new tab
+                    </p>
                     <ul class="flex-container">
                         <li class="flex-item-item-5">
                             <div class="flex-item-item-5-img-container">
@@ -744,13 +746,65 @@
                     <h2 class="section-heading">Sharpen</h2>
                     <p>
                         To sharpen an image, we used the same convolution function given and simply passed the filter given in the class, as well as the normalizer. We had unknown issues with pin noises showing up when sharpening some images, as in the example of wave below.
+                        <br>As shown in the image below (courtesy of Ravi Ramamoorthi), we diffuse the error for each pixel:
+                        <br>
+                        <br> Checkerboard:
+                        <img class="img-responsive blog-img" src="img/p1/sharpen_checkerboard.bmp" alt="">
+                        <br> Flower:
+                        <img class="img-responsive blog-img" src="img/p1/sharpen_flower.bmp" alt="">
+                        <br> Wave looks off, it's got pink noises in it.
+                        <img class="img-responsive blog-img" src="img/p1/sharpen_wave.bmp" alt="">
                     </p>
+                    <blockquote> Example Usage: 
+                        <br>
+                        <code>
+                            $ ./image -sharpen &lt;input.bmp &gt;.out.bmp
+                        </code>
+                    </blockquote>
 
                     <h2 class="section-heading">Edge Detection</h2>
                     <p>
                         To do edge detection, we apply the sobel horizontal (and vertical) filters to a grayscale version of the image. The Filters simply ignore the current row (or column), weigh the top row (left column) positive and the the bottom row (right side) negative. That way, you can check the difference in luminance around a certain pixel, if either are high then the image is an edge in the image. Then, based on a passed threshold, you determine whether its color is white (it is an edge/important point) or black (it’s not important). 
                     </p>
+                    <ul class="flex-container">
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/wave.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">Original Image</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/edge_detect_wave_10.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">threshold = 10</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/edge_detect_wave_150.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">150</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/edge_detect_wave_200.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">200</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/edge_detect_wave_255.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">255</span>
+                        </li>
+                    </ul>
 
+                    <blockquote> Example Usage: 
+                        <br>
+                        <code>
+                            $ ./image -edgeDetect 100 &lt;input.bmp &gt;.out.bmp
+                        </code>
+                    </blockquote>
 
 
 
@@ -797,7 +851,175 @@
                         </blockquote>
                         Note that for minification we need only sum where |su'− x| is smaller than the filter width because that's when the filter is centered at a/s and has width 1/s times the normal filter width.
                     </p>
+
                     <p>
+                        Nearest neighbor sampling (To see full rez image, you'll need to open the image in a new tab):
+                    </p>
+                    <ul class="flex-container">
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_point_flower_300_300.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">300 x 300</span>
+                        </li>
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_point_flower_300_512.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">300 x 512</span>
+                        </li>
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_point_flower_512_300.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">512 x 300</span>
+                        </li>
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_point_flower_800_800.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">800 x 800</span>
+                        </li>
+                    </ul>
+                    <ul class="flex-container">
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_point_checkerboard_300_300.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">300 x 300</span>
+                        </li>
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_point_checkerboard_300_512.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">300 x 512</span>
+                        </li>
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_point_checkerboard_512_300.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">512 x 300</span>
+                        </li>
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_point_checkerboard_800_800.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">800 x 800</span>
+                        </li>
+                    </ul>
+
+                    <p>
+                        Hat filter:
+                    </p>
+                    <ul class="flex-container">
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_hat_filter_flower_300_300.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">300 x 300</span>
+                        </li>
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_hat_filter_flower_300_512.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">300 x 512</span>
+                        </li>
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_hat_filter_flower_512_300.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">512 x 300</span>
+                        </li>
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_hat_filter_flower_800_800.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">800 x 800</span>
+                        </li>
+                    </ul>
+                    <ul class="flex-container">
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_hat_filter_checkerboard_300_300.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">300 x 300</span>
+                        </li>
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_hat_filter_checkerboard_300_512.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">300 x 512</span>
+                        </li>
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_hat_filter_checkerboard_512_300.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">512 x 300</span>
+                        </li>
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_hat_filter_checkerboard_800_800.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">800 x 800</span>
+                        </li>
+                    </ul>
+
+                    <p>
+                        Mitchell filter:
+                    </p>
+                    <ul class="flex-container">
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_mitchell_filter_flower_300_300.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">300 x 300</span>
+                        </li>
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_mitchell_filter_flower_300_512.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">300 x 512</span>
+                        </li>
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_mitchell_filter_flower_512_300.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">512 x 300</span>
+                        </li>
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_mitchell_filter_flower_800_800.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">800 x 800</span>
+                        </li>
+                    </ul>
+                    <ul class="flex-container">
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_mitchell_filter_checkerboard_300_300.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">300 x 300</span>
+                        </li>
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_mitchell_filter_checkerboard_300_512.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">300 x 512</span>
+                        </li>
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_mitchell_filter_checkerboard_512_300.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">512 x 300</span>
+                        </li>
+                        <li class="flex-item-item-4">
+                            <div class="flex-item-item-4-img-container">
+                                <img class="img-responsive" src="img/p1/scale_mitchell_filter_checkerboard_800_800.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">800 x 800</span>
+                        </li>
+                    </ul>
+
                     <h2 class="section-heading">Antialiased Shift</h2>
                     <p>
                         To shift an image based on fractions Sx and Sy, we check for integer inputs, if we shift the image using integers, we treat it the same as using nearest neighbor sampling. Otherwise, we convolve/resample with kernel/filter h
@@ -806,6 +1028,9 @@
                         </blockquote>
                         where u = x - Sx and v = y - Sy. Note that kernel width for hat filter and Mitchell filter are the same as in antialiased scale.
                     </p>
+
+
+
                     <blockquote> 
                         Example Usage: 
                         <br>
