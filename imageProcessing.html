@@ -1029,7 +1029,57 @@
                         where u = x - Sx and v = y - Sy. Note that kernel width for hat filter and Mitchell filter are the same as in antialiased scale.
                     </p>
 
-
+                    <p>
+                        Integer Sx and Sy or Nearest neighbor sampling (To see full rez image, you'll need to open the image in a new tab):
+                    </p>
+                    <ul class="flex-container">
+                        <li class="flex-item-item-2">
+                            <div class="flex-item-item-2-img-container">
+                                <img class="img-responsive" src="img/p1/shift_point_checkerboard_10_25.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">sx = 10, sy = 25</span>
+                        </li>
+                        <li class="flex-item-item-2">
+                            <div class="flex-item-item-2-img-container">
+                                <img class="img-responsive" src="img/p1/shift_point_checkerboard_-10.3_25.8.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">sx = -10.3, sy = -25.8</span>
+                        </li>
+                    </ul>
+                    <p>
+                        Hat Filter
+                    </p>
+                    <ul class="flex-container">
+                        <li class="flex-item-item-2">
+                            <div class="flex-item-item-2-img-container">
+                                <img class="img-responsive" src="img/p1/shift_hat_checkerboard_10_25.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">sx = 10, sy = 25</span>
+                        </li>
+                        <li class="flex-item-item-2">
+                            <div class="flex-item-item-2-img-container">
+                                <img class="img-responsive" src="img/p1/shift_hat_checkerboard_-10.3_25.8.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">sx = -10.3, sy = -25.8</span>
+                        </li>
+                    </ul>
+                    <p>
+                        Mitchell Filter
+                    </p>
+                    <ul class="flex-container">
+                        <li class="flex-item-item-2">
+                            <div class="flex-item-item-2-img-container">
+                                <img class="img-responsive" src="img/p1/shift_mitchell_checkerboard_10_25.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">sx = 10, sy = 25</span>
+                        </li>
+                        <li class="flex-item-item-2">
+                            <div class="flex-item-item-2-img-container">
+                                <img class="img-responsive" src="img/p1/shift_mitchell_checkerboard_-10.3_25.8.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">sx = -10.3, sy = -25.8</span>
+                        </li>
+                    </ul>
 
                     <blockquote> 
                         Example Usage: 
@@ -1055,9 +1105,32 @@
                     <p>
                         For a fun filter, we decided to implement a subtle motion blur-like filter where each image looks at its right and left neighbors, then update its value based on theirs. It was a simple 3x3 filter whose top and bottom rows are 0s and the middle weighs the centered pixel the most. 
                     </p>
-
-
-
+                    <ul class="flex-container">
+                        <li class="flex-item-item-3">
+                            <div class="flex-item-item-3-img-container">
+                                <img class="img-responsive" src="img/p1/motion_blur_flower.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">Flower</span>
+                        </li>
+                        <li class="flex-item-item-3">
+                            <div class="flex-item-item-3-img-container">
+                                <img class="img-responsive" src="img/p1/motion_blur_checkerboard.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">Checkerboard</span>
+                        </li>
+                        <li class="flex-item-item-3">
+                            <div class="flex-item-item-3-img-container">
+                                <img class="img-responsive" src="img/p1/motion_blur_wave.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">Wave</span>
+                        </li>
+                    </ul>
+                    <blockquote> Example Usage: 
+                        <br>
+                        <code>
+                            $ ./image -fun &lt;input.bmp &gt;.out.bmp
+                        </code>
+                    </blockquote>
 
 
                     
