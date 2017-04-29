@@ -847,7 +847,7 @@
                         <blockquote class="equation">
                             I<sub>new</sub>(x, y) = &Sigma; <sub>u'=(u - w) to (u + w)</sub> &Sigma; <sub>v'=(v - w) to (v + w)</sub> h(u'-u, v'-v) I<sub>old</sub>(u', v')
                         </blockquote>
-                        where u = x / &gamma; (where &gamma is scale factor > 1). Kernel width varies from filter to filter. For hat filter, kernel width is 1, so the corresponding region gets integrated over goes from u' goes from u - 1 to u + 1. For Mitchell filter, the kernel width is 4. 
+                        where u = x / &gamma; (&gamma is scale factor > 1). I<sub>new</sub> is the intensities of the new pixel sampled at position (a,b), w is kernel width, h is the filter and I<sub>old</sub> is the intensities of the pixel to be sampled in the old image. Kernel width varies from filter to filter. For hat filter, kernel width is 1, so the corresponding region gets integrated over goes from u' goes from u - 1 to u + 1. For Mitchell filter, the kernel width is 4. 
                     </p>
                     <p>
                         Minification is similar to mipmapping for texture maps. We use fat pixels of size 1 / &gamma; (where &gamma is scale factor < 1) with new size &gamma; * original size. Each fat pixel is integrated over corresponding region in original image using the filter kernel
