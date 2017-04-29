@@ -78,7 +78,7 @@
                         <h3>
                             Implemented some basic image processing operations in C++, such as those found in programs like <i>Photoshop</i> or <i>ImageMagick</i>. It includes basic things like brightening, gamma correcting and cropping, as well as more advanced operations like antialiased shifting and resizing.
                         </h3>
-                        <span class="meta">Posted on April 08, 2017</span>
+                        <span class="meta">Posted by Alex Ouyang & Antwan gaggi on April 27, 2017</span>
                     </div>
                 </div>
             </div>
@@ -92,7 +92,7 @@
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <h2 class="section-heading">Software</h2>
                     <p>
-                    Download Unix Executable:
+                    <a href ="https://drive.google.com/open?id=0B6StwNJiMLLzLXdZeEZrdE5uOE0">Download Unix Executable Here</a>
                     </p>
                     <p>
                     <blockquote> 
@@ -472,7 +472,7 @@
                         <br>Bottom Right: &delta; = 1/16
                         <br>Error diffusion reduces net errors which gives better result in comparison to Random Dither.
                         <br>
-                        <br>As shown in the image below, we diffuse the error for each pixel:
+                        <br>As shown in the image below (courtesy of Ravi Ramamoorthi), we diffuse the error for each pixel:
                         <img class="img-responsive blog-img" src="img/p1/error_diffusion.png" alt="">
                         Pseudocode:
                         <blockquote class="equation">
@@ -653,6 +653,183 @@
                             <span class="flex-item-text">5</span>
                         </li>
                     </ul>
+
+
+
+
+
+
+
+
+
+
+                    <h2 class="section-heading">Blur</h2>
+                    <p>
+                        To calculate blur, we first calculate a sigma factor based on the kernel width. Using the given equation to generate a kernel of old width (i.e. 3, 5, 7, 11...), you apply the kernel centered at each pixel calculate a new value using its neighbors. Before doing so, we convert it to a integer based kernel by first dividing it by the smallest value (the furthest from the center of the kernel). Then normalizing it to it doesn't affect the brightness of the picture by dividing the kernel by the sum of its values, then after generating a new value for the main pixel, we multiply it by the normalizing factor to get the right pixel color values. The idea here is that each pixel becomes a weighted sum of the pixels close to it, the closer the pixels are to the center pixel, the more weight they carry. 
+                    </p>
+
+                    <ul class="flex-container">
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/flower.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">Original Image</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/blur_3_flower.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">kernel width = 3</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/blur_5_flower.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">5</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/blur_7_flower.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">7</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/blur_11_flower.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">11</span>
+                        </li>
+                    </ul>
+
+                    <ul class="flex-container">
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/checkerboard.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">Original Image</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/blur_3_checkerboard.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">kernel width = 3</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/blur_5_checkerboard.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">5</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/blur_7_checkerboard.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">7</span>
+                        </li>
+                        <li class="flex-item-item-5">
+                            <div class="flex-item-item-5-img-container">
+                                <img class="img-responsive" src="img/p1/blur_11_checkerboard.bmp" alt="">
+                            </div>
+                            <span class="flex-item-text">11</span>
+                        </li>
+                    </ul>
+
+                    <blockquote> Example Usage: 
+                        <br>
+                        <code>
+                            $ ./image -blur 3 &lt;input.bmp &gt;.out.bmp
+                        </code>
+                    </blockquote>
+
+                    <h2 class="section-heading">Sharpen</h2>
+                    <p>
+                        To sharpen an image, we used the same convolution function given and simply passed the filter given in the class, as well as the normalizer. We had unknown issues with pin noises showing up when sharpening some images, as in the example of wave below.
+                    </p>
+
+                    <h2 class="section-heading">Edge Detection</h2>
+                    <p>
+                        To do edge detection, we apply the sobel horizontal (and vertical) filters to a grayscale version of the image. The Filters simply ignore the current row (or column), weigh the top row (left column) positive and the the bottom row (right side) negative. That way, you can check the difference in luminance around a certain pixel, if either are high then the image is an edge in the image. Then, based on a passed threshold, you determine whether its color is white (it is an edge/important point) or black (it’s not important). 
+                    </p>
+
+
+
+
+
+
+                    <h2 class="section-heading">Antialiased Scale and Shift</h2>
+                    <p>
+                        We implemented image scaling and shifting by a real (non-integer) value using three different filters. The first one is nearest neighbor sampling; it is a naive approach that leads to significant aliasing and jaggies. Aliasing is usually caused by under-sampling or poor reconstruction. The second one is a linear filter called hat filter and the third one is a cubic filter called Mitchell reconstruction filter. Both of those filters try to achieve anti-aliasing using convolution.
+                    </p>
+                    <h2 class="section-heading">Nearest Neighbor Sampling</h2>
+                    <p>
+                        Nearest neighbor or point reconstruction simply samples the nearest pixel in the original image to reconstruct each pixel in the target image. For example, say if you scale an image in y direction by sy and x direction by sx, let's define the operation to be the transformation from (u, v) to (x, y) where (u, v) is the warped location in the source image, or old coordinate and (x, y) is the new coordinate in the transformed image. The pixel at (x, y) in the transformed image is sampled from the (u, v) in the original image, where u = round(x / sx), v = round(y / sy).
+                    </p>
+                    <h2 class="section-heading">Hat Filter</h2>
+                    <p>
+                        Hat filter is a linear filter described by the function
+                        <blockquote class="equation">
+                            f(x) = 1 - |x|
+                        </blockquote>
+                        where f(x) is none zero when |x| <= 1. For image processing, we construct the 2D bilinear filter from this 1D linear filter by multipling them together: f(x, y) = f(x)f(y)
+                    </p>
+                    <h2 class="section-heading">Mitchell Reconstruction Cubic Filter</h2>
+                    <p>
+                        Mitchell Reconstruction Cubic Filter is an extension of cubic interpolation. In contrast to nearest neighbor or linear filter, it produces smoother image with fewer artifacts. It is described by the function
+                        <blockquote class="equation">
+                            f(0 <= |x| <= 1) = (7 |x|<sup>3</sup> - 12 |x|<sup>2</sup> + 16 / 3) / 6
+                            <br>
+                            f(1 <= |x| <= 2) = (-7/3 |x|<sup>3</sup> + 12 |x|<sup>2</sup> - 20 |x| + 32 / 3) / 6
+                        </blockquote>
+                        For processing 2D images, we use the bicubic filter f(x, y).
+                    </p>
+                    <h2 class="section-heading">Antialiased Scale</h2>
+                    <p>
+                        To magnifify an image, we interpolate between the original samples to evaluate the fractional values. We do so by convolving with the filter/kernel
+                        <blockquote class="equation">
+                            I<sub>new</sub>(x, y) = &Sigma; <sub>u'=(u - w) to (u + w)</sub> &Sigma; <sub>v'=(v - w) to (v + w)</sub> h(u'-u, v'-v) I<sub>old</sub>(u', v')
+                        </blockquote>
+                        where u = x / &gamma; (where &gamma is scale factor > 1), I<sub>new</sub>(x) is the intensities of the new pixel sampled at position x, w is kernel width, h(x) is the filter and I<sub>old</sub>(x) is the intensities of the pixel to be sampled in the old image. Kernel width varies from filter to filter. For hat filter, kernel width is 1, so the corresponding region gets integrated over goes from u' goes from u - 1 to u + 1. For Mitchell filter, the kernel width is 4. 
+                    </p>
+                    <p>
+                        Minification is similar to mipmapping for texture maps. We use fat pixels of size 1 / &gamma; (where &gamma is scale factor < 1) with new size &gamma; * original size. Each fat pixel is integrated over corresponding region in original image using the filter kernel
+                        <blockquote class="equation">
+                            I<sub>new</sub>(x, y) = &Sigma; <sub>u'=(u - w/&gamma;) to (u + w/&gamma;)</sub> &Sigma; <sub>v'=(v - w/&gamma;) to (v + w/&gamma;)</sub> h(&gamma;(u'-u), &gamma;(v'-v)) I<sub>old</sub>(u', v')
+                        </blockquote>
+                        Note that for minification we need only sum where |su'− x| is smaller than the filter width because that's when the filter is centered at a/s and has width 1/s times the normal filter width.
+                    </p>
+                    <p>
+                    <h2 class="section-heading">Antialiased Shift</h2>
+                    <p>
+                        To shift an image based on fractions Sx and Sy, we check for integer inputs, if we shift the image using integers, we treat it the same as using nearest neighbor sampling. Otherwise, we convolve/resample with kernel/filter h
+                        <blockquote class="equation">
+                            I<sub>new</sub>(x, y) = &Sigma; <sub>u'=(u - w) to (u + w)</sub> &Sigma; <sub>v'=(v - w) to (v + w)</sub> h(u'-u, v'-v) I<sub>old</sub>(u', v')
+                        </blockquote>
+                        where u = x - Sx and v = y - Sy. Note that kernel width for hat filter and Mitchell filter are the same as in antialiased scale.
+                    </p>
+                    <blockquote> 
+                        Example Usage: 
+                        <br>
+                        To change the size of the image, use "-size" flag.  "-sampling" flag is is used in combination with "-shift" or "-size" to determine which filter to use for scaling or resizing. There are 3 filters in total, the corresponding args are: 0 = nearest neighbor, 1 = hat filter, 2 = Mitchell filter
+                        <br>
+                        <code>
+                            $ ./image -sampling 2 -size 350 500 &lt;input.bmp &gt;.out.bmp
+                        </code>
+                        <br>
+                        To change shift, simply use "-shift" flag
+                        <br>
+                        <code>
+                            $ ./image -sampling 2 -shift 33.3 55.5 &lt;input.bmp &gt;.out.bmp
+                        </code>  
+                    </blockquote>
+
+
+
+
+
+                    <h2 class="section-heading">Fun Filter: Motion Blur Filter</h2>
+                    <p>
+                        For a fun filter, we decided to implement a subtle motion blur-like filter where each image looks at its right and left neighbors, then update its value based on theirs. It was a simple 3x3 filter whose top and bottom rows are 0s and the middle weighs the centered pixel the most. 
+                    </p>
 
 
 
