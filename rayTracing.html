@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Path Tracing</title>
+    <title>A Recursive Path Tracer</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -38,31 +38,9 @@
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header page-scroll">
-                <!--<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    Menu <i class="fa fa-bars"></i>
-                </button>-->
                 <a class="navbar-brand" href="index.html">Main Page</a>
             </div>
 
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <!--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="index.html">Projects</a>
-                    </li>
-                    <li>
-                        <a href="about.html">About</a>
-                    </li>
-                    <li>
-                        <a href="post.html">Sample Post</a>
-                    </li>
-                    <li>
-                        <a href="contact.html">Contact</a>
-                    </li>
-                </ul>
-            </div>-->
-            <!-- /.navbar-collapse -->
         </div>
         <!-- /.container -->
     </nav>
@@ -91,35 +69,58 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
+                    <h2 class="section-heading">Recursive Path Tracing</h2>
+                    <p>
+                        One way to implement ray tracing is to use Monte Carlo method path tracing. Fundamentally, path tracing integrates over all the illuminance arriving to a single point on a surface recursively, and you repeat this process for each ray shoots out form the camera. The illuminance is calculated using a BRDF (Bidirectional Reflectance Distribution Function) which is a function that defines how light is reflected at a surface.
+                    <p>
+                    <p>
+                        My initial version of the path tracer supports diffuse lighting without shadows from both point and directional light sources on primitive object such as boxes. I also have a simple camera model with adjustable camera matrix, field of view, and output image resolution. It looks something like this:
+                        <img class="img-responsive blog-img" src="img/p2/basic.jpg" alt="">
+                    <p>
+
+                    <h2 class="section-heading">Bounding Volume Hierarchy (BVH)</h2>
+                    <p>
+                        For a path tracer, we can roughly estimate its rendering time as being proportional to the number of ray-triangle intersection tests required. My initial version of the path tracer is very primitive, for each ray I loop through all triangles in the scene to check for intersection, but this method is very expansive and inefficient, so I decided to do something to speed up my path tracer. The obvious way is to add multi-threading, which I did usig OpenMP. The rendering process is dynamically scheduled where the image is divided into rows of pixels and are fed into the threads. Multi-threading increased the rendering speed significantly.
+                    </p>
+                    <p>
+                        Another 
+                         ray-triangle intersection more efficient.
+                        
+                        On top of that I also implemented a mesh loader for PLY objects, it parses a mesh file and construct the BVH tree 
+                    <p>
+
                     <h2 class="section-heading">Environment Mapping</h2>
                     <p>
                         I started out implementing an spherical environment map because it is an easy way to make rendered images look more realistic. To implement the environment map, for each ray that doesn't intersect with anything in the scene I simply UV map the ray direction onto the sky box texture to sample a color. To make testing easier, I implemented sphere ray intersection and used spheres instead of other complicated models.
                         <br>
                         <br>
-                        I got some rally nice environment panorama online for free. Below are the results
-                        <br>
+                        I got some really nice environment panorama online for free from http://texturify.com/. Below are the results
                         <img class="img-responsive blog-img" src="img/p2/env_2.jpg" alt="">
                         <img class="img-responsive blog-img" src="img/p2/env_1.jpg" alt="">
                     <p>
 
                     <h2 class="section-heading">Fresnel Dielectric</h2>
                     <p>
-                        Since I already have a working path tracer with ideal fresnel surface implemented, I decided to implementing Fresnel Dielectrics next. The ideal fresnel surface assumes total internal reflection, which means the proportion of the light reflected is 100% (fr = 1), so only the reflection path is chosen. For the Fresnel Dielectrics, I calculate the proportion of the light reflected (fr) and transmitted (ft) using the Fresnel Equations, then chose either the reflection or the refraction path based on importance sampling given fr and ft.
-                        <br>
-                        <br> 
-                        The following image shows a Fresnel Dielectric spheres with refraction index of 1.333f(water), 1.309f(ice), 1.8f(glass), 2.42f(diamond), and 10 (from left to right). All spheres below have absorption coefficient of 0, roughtnes of 0.2f and Sampling size of 2x2 per pixel.
+                        Since I already have a working path tracer with ideal fresnel surface implemented, I decided to implementing Fresnel Dielectrics next. The ideal fresnel surface assumes total internal reflection, which means the proportion of the light reflected is 100%, so only the reflection path is chosen. For the Fresnel Dielectrics, I calculate the proportion of the light reflected and transmitted using the Fresnel Equations, then chose either the reflection or the refraction path based on importance sampling given fr (Fresnel reflection coefficient) and ft (Fresnel refraction coefficient).
+                    </p>
+                    <p>
+                        The following image shows a Fresnel Dielectric spheres with refraction index of 1.333(water), 1.309(ice), 1.8(glass), 2.42(diamond), and 10 in order from left to right. All spheres below have absorption coefficient of 0, roughtnes of 0.2 and sampling size of 2x2 rays per pixel.
                         <img class="img-responsive blog-img" src="img/p2/dielectric_2x2.jpg" alt="">
                         <br> 
-                        This is the same image with 20x20 sampling size.
+                        This is the same image with 20x20 sampling size, it's a lot less noisy as we can see.
                         <img class="img-responsive blog-img" src="img/p2/dielectric_20x20.jpg" alt="">
-                        <br>
-                        The following image has different absorption coefficient and absorption colors.
-                        Notice that the middle sphere has a ring shaped noise to it, sadly I don't know what it is.
-                        <img class="img-responsive blog-img" src="img/p2/dielectric__color_20x20.jpg" alt="">
                         <br>
                         Yet another image showcasing Fresnel Dielectric material with refraction index of 10.
                         <img class="img-responsive blog-img" src="img/p2/dielectric_2.jpg" alt="">
+                    </p>
+                    
+
+                    <h2 class="section-heading">Absorption</h2>
                     <p>
+                        I then used the Beer-Lambert law to achieve color absorption for Fresnel Dielectrics. The Beer-Lambert law relates the absorption of light to the properties of the material through which the light is traveling. The following image has different absorption coefficient and absorption colors. Notice that the middle sphere has a ring shaped noise to it, sadly I don't know what's causing it.
+                        <img class="img-responsive blog-img" src="img/p2/dielectric__color_20x20.jpg" alt="">
+                    <p>
+
 
                     <h2 class="section-heading">Cook Torrence BRDF - Totally Fail</h2>
                     <p>
@@ -137,7 +138,7 @@
 
                     <h2 class="section-heading">Final Results</h2>
                     <p>
-                        These are the final images I rendered. The sphere on the far left is transparent glass Fresnel Dielectrics and the dragon on the right has absorption color of red. The black holder is also Fresnel Dielectrics with absoprtion color of RGB(0.2, 0.2, 0.2) and really high absorption coefficient of 20. The gold dragon in the middle is Ashikhmin BRDF, it looks gorgeous isn't it.
+                        These are the final images I rendered. The sphere on the far left is transparent glass Fresnel Dielectrics and the dragon on the right has absorption color of red. The black holder is also Fresnel Dielectrics with absoprtion color of RGB(0.2, 0.2, 0.2) and really high absorption coefficient of 20. The gold dragon in the middle is Ashikhmin BRDF. Those images below each have a sampling rate of 10x10 per pixel and it took about an hour to render each image on my 13'' macbook pro. The result looks pretty satisfying. 
                         <img class="img-responsive blog-img" src="img/p2/final_2.jpg" alt="">
                         <br>
                         Yet another image.
