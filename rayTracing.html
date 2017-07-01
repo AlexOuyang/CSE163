@@ -80,13 +80,14 @@
 
                     <h2 class="section-heading">Bounding Volume Hierarchy (BVH)</h2>
                     <p>
-                        For a path tracer, we can roughly estimate its rendering time as being proportional to the number of ray-triangle intersection tests required. My initial version of the path tracer is very primitive, for each ray I loop through all triangles in the scene to check for intersection, but this method is very expansive and inefficient, so I decided to do something to speed up my path tracer. The obvious way is to add multi-threading, which I did usig OpenMP. The rendering process is dynamically scheduled where the image is divided into rows of pixels and are fed into the threads. Multi-threading increased the rendering speed significantly.
+                        For a path tracer, we can roughly estimate its rendering time as being proportional to the number of ray-triangle intersection tests required. My initial version of the path tracer is very primitive, for each ray I loop through all triangles in the scene to check for intersection, but this method is very expansive and inefficient, so I decided to do something to speed up my path tracer. The obvious way is to add multi-threading, which I did using OpenMP. The rendering process is dynamically scheduled, the image is divided into batches where each batch is a row of pixels and are fed into the threads. Multi-threading increased the rendering speed significantly.
                     </p>
                     <p>
-                        Another 
-                         ray-triangle intersection more efficient.
-                        
-                        On top of that I also implemented a mesh loader for PLY objects, it parses a mesh file and construct the BVH tree 
+                        Another common way to increase rendering speed is to take advantage of spatial data structure and that's why I decided to implement a type of BVH called Axis-aligned Box Tree. The idea is to wrap all triangles in the scene in bounding volumes that form the leaf nodes of the tree. These nodes are then grouped as small sets and enclosed within larger bounding volumes. These, in turn, are also grouped and enclosed within other larger bounding volumes in a recursive fashion, eventually resulting in a tree structure with a single bounding volume at the top of the tree. This reduces the ray-triangle intersection check from linear to logarithmic. The tree construction process happens before we begin actual rendering, it can be a time consuming process that itself often runs at O(N log N) performance for N triangles in the scene. Note that O(N log N) is slower than linear, but we hope that the entire tree creation is still faster than the render itself. Ultimately however, as N grows, this can be the limiting factor to scene complexity.
+                        <img class="img-responsive blog-img" src="img/p2/bvh.png" alt="">
+                    </p>
+                    </p>
+                        On top of that I also implemented a mesh loader for PLY objects, it parses a mesh file and construct the BVH tree.
                     <p>
 
                     <h2 class="section-heading">Environment Mapping</h2>
