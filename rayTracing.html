@@ -52,9 +52,9 @@
             <div class="row">
                 <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1">
                     <div class="post-heading">
-                        <h1>CSE 168 Final Project</h1>
+                        <h1>A Recursive Path Tracer</h1>
                         <h3>
-                            Implemented dielectric Fresnel material, absorption using Beer Lambert Law, environment mapping, Ashikhmin BRDF and attempted Cook Torrence BRDF.
+                            Implemented a Monte Carlo method based path tracer that supports lambertian surface, fresnel metals, dielectric Fresnel material, absorption using Beer Lambert Law, environment mapping, Ashikhmin BRDF and attempted Cook Torrence BRDF.
                         </h3>
                         <span class="meta">Posted by Alex Ouyang on June 15, 2017</span>
                     </div>
@@ -71,7 +71,7 @@
 
                     <h2 class="section-heading">Recursive Path Tracing</h2>
                     <p>
-                        One way to implement ray tracing is to use Monte Carlo method path tracing. Fundamentally, path tracing integrates over all the illuminance arriving to a single point on a surface recursively, and you repeat this process for each ray shoots out form the camera. The illuminance is calculated using a BRDF (Bidirectional Reflectance Distribution Function) which is a function that defines how light is reflected at a surface.
+                        One way to implement ray tracing is to use Monte Carlo method based path tracing. Fundamentally, path tracing integrates over all the illuminance arriving to a single point on a surface recursively, and you repeat this process for each ray shoots out form the camera. The illuminance is calculated using a BRDF (Bidirectional Reflectance Distribution Function) which is a function that defines how light is reflected at a surface.
                     <p>
                     <p>
                         My initial version of the path tracer supports diffuse lighting without shadows from both point and directional light sources on primitive object such as boxes. I also have a simple camera model with adjustable camera matrix, field of view, and output image resolution. It looks something like this:
@@ -89,6 +89,21 @@
                     </p>
                         On top of that I also implemented a mesh loader for PLY objects, it parses a mesh file and construct the BVH tree.
                     <p>
+
+
+                    <h2 class="section-heading">AntiAliasing</h2>
+                    <p>
+                    </p>
+
+
+                    <h2 class="section-heading">Lambertian reflectance and Cosine-Weighted Hemisphere sample distribution</h2>
+                    <p>
+                    </p>
+
+
+                    <h2 class="section-heading">Fresnel metals</h2>
+                    <p>
+                    </p>
 
                     <h2 class="section-heading">Environment Mapping</h2>
                     <p>
